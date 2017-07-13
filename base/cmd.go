@@ -4,12 +4,12 @@ import (
   "strconv"
   "net"
   "reflect"
-  "log"
+  "sync"
 
   "github.com/lucasmbaia/grpc-base/config"
   "github.com/lucasmbaia/grpc-base/consul"
   "google.golang.org/grpc/credentials"
-  //"google.golang.org/grpc/reflection"
+  "google.golang.org/grpc/reflection"
   "google.golang.org/grpc"
 )
 
@@ -30,7 +30,10 @@ func (c ConfigCMD) Run() error {
     opts		[]grpc.ServerOption
     s			*grpc.Server
     args		[]reflect.Value
+    wg			sync.WaitGroup
   )
+
+  wg.Add(2)
 
   go func() {
     if listen, err = net.Listen(config.EnvConfig.TypeConnection, ":" + strconv.Itoa(config.EnvConfig.ServicePort)); err != nil {
@@ -62,11 +65,18 @@ func (c ConfigCMD) Run() error {
     args = append(args, reflect.ValueOf(c.ServerConfig))
     c.ServiceServer.Call(args)
 
-    //reflection.Register(s)
+    reflection.Register(s)
 
     errChan <-s.Serve(listen)
-    //errChan <-gateway(c.HandlerEndpoint, c.SSL)
+    wg.Done()
   }()
+
+  go func() {
+    errChan <-gateway(c.HandlerEndpoint, c.SSL)
+    wg.Done()
+  }()
+
+  wg.Wait()
 
   select {
   case e := <-errChan:

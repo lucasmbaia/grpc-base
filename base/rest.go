@@ -43,10 +43,6 @@ func registerGateway(ctx context.Context, handlerEndpoint reflect.Value, ssl boo
   args = append(args, reflect.ValueOf(dialOpts))
   handlerEndpoint.Call(args)
 
-  /*if err = orchestration.RegisterOrchestrationServiceHandlerFromEndpoint(ctx, mux, *endpoint, dialOpts); err != nil {
-    return nil, err
-  }*/
-
   return mux, nil
 }
 
