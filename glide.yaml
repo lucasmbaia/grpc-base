@@ -7,4 +7,4 @@ import:
   version: 1.2.0
 - package: github.com/hashicorp/consul/api
 - package: github.com/lucasmbaia/go-environment
-- package: github.com/coreos/etcd/client
+- package: github.com/golang/protobuf
