@@ -1,0 +1,53 @@
+hash: 56045a1272296f61b7e515de2cdcfa2c85020a6b7aef75d41ad50917165dc616
+updated: 2017-07-13T08:38:32.456614753-03:00
+imports:
+- name: github.com/coreos/etcd
+  version: 61fc123e7a8b14a0a258aa3f5c4159861b1ec2e7
+  subpackages:
+  - client
+  - pkg/pathutil
+  - pkg/srv
+  - pkg/types
+  - version
+- name: github.com/coreos/go-semver
+  version: 8ab6407b697782a06568d4b7f1db25550ec2e4c6
+  subpackages:
+  - semver
+- name: github.com/golang/protobuf
+  version: 4bd1920723d7b7c925de087aa32e2187708897f7
+  subpackages:
+  - proto
+- name: github.com/grpc-ecosystem/grpc-gateway
+  version: 18d159699f2e83fc5bb9ef2f79465ca3f3122676
+- name: github.com/hashicorp/consul
+  version: 9e83a034e3eb83f470fe6280cd85c25ef275fd30
+  subpackages:
+  - api
+- name: github.com/hashicorp/go-cleanhttp
+  version: 3573b8b52aa7b37b9358d966a898feb387f62437
+- name: github.com/hashicorp/go-rootcerts
+  version: 6bb64b370b90e7ef1fa532be9e591a81c3493e00
+- name: github.com/hashicorp/serf
+  version: e39abe475740649229c5c72b0cc1da10da7ed23a
+  subpackages:
+  - coordinate
+- name: github.com/lucasmbaia/go-environment
+  version: e2e7e971c5ac076f2101eb5932c9e37bff8379dc
+  subpackages:
+  - etcd
+  - local
+- name: github.com/mitchellh/go-homedir
+  version: b8bc1bf767474819792c23f32d8286a45736f1c6
+- name: github.com/ugorji/go
+  version: ded73eae5db7e7a0ef6f55aace87a2873c5d2b74
+  subpackages:
+  - codec
+- name: golang.org/x/net
+  version: f01ecb60fe3835d80d9a0b7b2bf24b228c89260e
+  subpackages:
+  - context
+- name: google.golang.org/grpc
+  version: 27b2052c9524abc45ae991d6a402ddb91f06ba03
+  subpackages:
+  - reflection
+testImports: []
