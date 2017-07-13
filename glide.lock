@@ -1,5 +1,5 @@
-hash: 56045a1272296f61b7e515de2cdcfa2c85020a6b7aef75d41ad50917165dc616
-updated: 2017-07-13T08:38:32.456614753-03:00
+hash: ce2ffb9a459400183650bcf5268a4b23225c9307f10276529874fe018bc577cb
+updated: 2017-07-13T09:40:13.115539705-03:00
 imports:
 - name: github.com/coreos/etcd
   version: 61fc123e7a8b14a0a258aa3f5c4159861b1ec2e7
@@ -16,9 +16,20 @@ imports:
 - name: github.com/golang/protobuf
   version: 4bd1920723d7b7c925de087aa32e2187708897f7
   subpackages:
+  - jsonpb
   - proto
+  - protoc-gen-go/descriptor
+  - ptypes/any
+- name: github.com/google/go-genproto
+  version: b0a3dcfcd1a9bd48e63634bd8802960804cf8315
+  subpackages:
+  - tree/master/googleapis/api/annotations
 - name: github.com/grpc-ecosystem/grpc-gateway
   version: 18d159699f2e83fc5bb9ef2f79465ca3f3122676
+  subpackages:
+  - runtime
+  - runtime/internal
+  - utilities
 - name: github.com/hashicorp/consul
   version: 9e83a034e3eb83f470fe6280cd85c25ef275fd30
   subpackages:
@@ -46,8 +57,39 @@ imports:
   version: f01ecb60fe3835d80d9a0b7b2bf24b228c89260e
   subpackages:
   - context
+  - http2
+  - http2/hpack
+  - idna
+  - internal/timeseries
+  - lex/httplex
+  - trace
+- name: golang.org/x/text
+  version: cfdf022e86b4ecfb646e1efbd7db175dd623a8fa
+  subpackages:
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+- name: google.golang.org/genproto
+  version: b0a3dcfcd1a9bd48e63634bd8802960804cf8315
+  subpackages:
+  - googleapis/rpc/status
 - name: google.golang.org/grpc
   version: 27b2052c9524abc45ae991d6a402ddb91f06ba03
   subpackages:
+  - codes
+  - credentials
+  - grpclb/grpc_lb_v1
+  - grpclog
+  - internal
+  - keepalive
+  - metadata
+  - naming
+  - peer
   - reflection
+  - reflection/grpc_reflection_v1alpha
+  - stats
+  - status
+  - tap
+  - transport
 testImports: []
