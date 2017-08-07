@@ -8,3 +8,5 @@ import:
 - package: github.com/hashicorp/consul/api
 - package: github.com/lucasmbaia/go-environment
 - package: github.com/golang/protobuf
+- package: github.com/openzipkin/zipkin-go-opentracing
+- package: github.com/opentracing/opentracing-go

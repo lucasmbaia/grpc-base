@@ -1,20 +1,47 @@
-hash: 42e612092799eb325121d72a6d6e8a7f9edeb578dafa8fa225caad3077f78a78
-updated: 2017-07-13T11:08:53.72511927-03:00
+hash: b022b4bb0f9283064d4cb25fe1fb9cb3a84228497d061dcdfe3a33108c27454a
+updated: 2017-07-26T10:35:36.737348146-03:00
 imports:
+- name: github.com/apache/thrift
+  version: f790445d7c9c460b7daf5f46664124348899832b
+  subpackages:
+  - lib/go/thrift
 - name: github.com/coreos/etcd
   version: d40982fc9160b7471cd832bff34d09e218b12e0e
   subpackages:
   - client
   - pkg/pathutil
   - pkg/types
+- name: github.com/davecgh/go-spew
+  version: adab96458c51a58dc1783b3335dcce5461522e75
+  subpackages:
+  - spew
+- name: github.com/eapache/go-resiliency
+  version: b1fe83b5b03f624450823b751b662259ffc6af70
+  subpackages:
+  - breaker
+- name: github.com/eapache/go-xerial-snappy
+  version: bb955e01b9346ac19dc29eb16586c90ded99a98c
+- name: github.com/eapache/queue
+  version: 44cc805cf13205b55f69e14bcb69867d1ae92f98
+- name: github.com/go-logfmt/logfmt
+  version: 390ab7935ee28ec6b286364bba9b4dd6410cb3d5
+- name: github.com/gogo/protobuf
+  version: 7b6c6391c4ff245962047fc1e2c6e08b1cdfa0e8
+  subpackages:
+  - proto
 - name: github.com/golang/protobuf
-  version: 0a4f71a498b7c4812f64969510bcb4eca251e33a
+  version: 748d386b5c1ea99658fd69fe9f03991ce86a90c1
   subpackages:
   - jsonpb
   - proto
   - protoc-gen-go/descriptor
+  - ptypes
   - ptypes/any
+  - ptypes/duration
   - ptypes/struct
+  - ptypes/timestamp
+- name: github.com/golang/snappy
+  version: 553a641470496b2327abcac10b36396bd98e45c9
 - name: github.com/grpc-ecosystem/grpc-gateway
   version: 18d159699f2e83fc5bb9ef2f79465ca3f3122676
   subpackages:
@@ -22,7 +49,7 @@ imports:
   - runtime/internal
   - utilities
 - name: github.com/hashicorp/consul
-  version: 9e83a034e3eb83f470fe6280cd85c25ef275fd30
+  version: 07ae7bc2e1607bf2eb38fd60af89da5b68408d81
   subpackages:
   - api
 - name: github.com/hashicorp/go-cleanhttp
@@ -30,9 +57,11 @@ imports:
 - name: github.com/hashicorp/go-rootcerts
   version: 6bb64b370b90e7ef1fa532be9e591a81c3493e00
 - name: github.com/hashicorp/serf
-  version: e39abe475740649229c5c72b0cc1da10da7ed23a
+  version: bbeddf0b3ab3072a60525afbd6b6f47d33839eee
   subpackages:
   - coordinate
+- name: github.com/kr/logfmt
+  version: b84e30acd515aadc4b783ad4ff83aff3299bdfe0
 - name: github.com/lucasmbaia/go-environment
   version: ec6f9773bc189533a696a376a6dd5dc7103d212b
   subpackages:
@@ -40,12 +69,37 @@ imports:
   - local
 - name: github.com/mitchellh/go-homedir
   version: b8bc1bf767474819792c23f32d8286a45736f1c6
+- name: github.com/opentracing-contrib/go-observer
+  version: a52f2342449246d5bcc273e65cbdcfa5f7d6c63c
+- name: github.com/opentracing/opentracing-go
+  version: 06f47b42c792fef2796e9681353e1d908c417827
+  subpackages:
+  - ext
+  - log
+- name: github.com/openzipkin/zipkin-go-opentracing
+  version: a3f24586d6771f7a52012fc17b05a3f781592173
+  subpackages:
+  - flag
+  - thrift/gen-go/scribe
+  - thrift/gen-go/zipkincore
+  - types
+  - wire
+- name: github.com/pierrec/lz4
+  version: 5a3d2245f97fc249850e7802e3c01fad02a1c316
+- name: github.com/pierrec/xxHash
+  version: a0006b13c722f7f12368c00a3d3c2ae8a999a0c6
+  subpackages:
+  - xxHash32
+- name: github.com/rcrowley/go-metrics
+  version: 1f30fe9094a513ce4c700b9a54458bbb0c96996c
+- name: github.com/Shopify/sarama
+  version: 2fd980e23bdcbb8edeb78fc704de0c39a6567ffc
 - name: github.com/ugorji/go
   version: 5efa3251c7f7d05e5d9704a69a984ec9f1386a40
   subpackages:
   - codec
 - name: golang.org/x/net
-  version: f01ecb60fe3835d80d9a0b7b2bf24b228c89260e
+  version: f5079bd7f6f74e23c4d65efa0f4ce14cbd6a3c0f
   subpackages:
   - context
   - http2
@@ -55,7 +109,7 @@ imports:
   - lex/httplex
   - trace
 - name: golang.org/x/text
-  version: cfdf022e86b4ecfb646e1efbd7db175dd623a8fa
+  version: 836efe42bb4aa16aaa17b9c155d8813d336ed720
   subpackages:
   - secure/bidirule
   - transform
@@ -66,7 +120,7 @@ imports:
   subpackages:
   - googleapis/rpc/status
 - name: google.golang.org/grpc
-  version: 27b2052c9524abc45ae991d6a402ddb91f06ba03
+  version: 3ddcdc268d88595eb2f3721f7dc87970a6c3ab6e
   subpackages:
   - codes
   - credentials

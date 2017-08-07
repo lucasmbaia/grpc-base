@@ -28,6 +28,8 @@ type Config struct {
   ServerNameAuthority   string	  `env:"SERVER_NAME_AUTHORITY" envDefault:""`
   WorkflowsName		[]string  `env:"WORKFLOWS_NAME" envDefault:""`
   GrpcSSL		bool	  `env:"GRPC_SSL" envDefault:""`
+  Tracer		bool	  `env:"TRACER" envDefault:"false"`
+  ZipkinURL		string	  `env:"ZIPKIN_URL" envDefault:""`
 }
 
 type Service struct {
