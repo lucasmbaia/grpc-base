@@ -29,7 +29,7 @@ func TestFlowZipkin(t *testing.T) {
     ctx	      = context.Background()
   )
 
-  if collector, err = newCollector("shit"); err != nil {
+  if collector, err = newCollector("merda"); err != nil {
     log.Fatalf("Error to create new collector: ", err)
   }
 
@@ -37,8 +37,8 @@ func TestFlowZipkin(t *testing.T) {
 
   collector2, _ := newCollector("god")
   s.Event([]string{"Pocs"})
-  s2 := collector.OpenChildSpan(s.Ctx, "Pocs", tags, nil)
-  sc := collector.OpenChildSpan(s2.Ctx, "cururu", tags, s2.Span)
+  s2 := collector2.OpenChildSpan(s.Ctx, "Pocs", tags, nil)
+  sc := collector2.OpenChildSpan(s2.Ctx, "cururu", tags, s2.Span)
 
   sc.Span.Finish()
   s2.Span.Finish()
@@ -46,8 +46,8 @@ func TestFlowZipkin(t *testing.T) {
 
   collector3, _ := newCollector("war")
   s.Event([]string{"Coco"})
-  s3 := collector.OpenChildSpan(s.Ctx, "Coco", tags, nil)
-  sc2 := collector.OpenChildSpan(s3.Ctx, "pega", tags, nil)
+  s3 := collector3.OpenChildSpan(s.Ctx, "Coco", tags, nil)
+  sc2 := collector3.OpenChildSpan(s3.Ctx, "pega", tags, nil)
 
   sc2.Span.Finish()
   s3.Span.Finish()
