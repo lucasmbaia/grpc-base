@@ -1,7 +1,6 @@
 package consul
 
 import (
-  "os"
   "strings"
   "strconv"
 
@@ -27,14 +26,9 @@ type consulConfig struct {
 
 func RegisterService() error {
   var (
-    err	      error
     urlCheck  *strings.Replacer
     service   consulConfig
   )
-
-  if hostname, err = os.Hostname(); err != nil {
-    return err
-  }
 
   urlCheck = strings.NewReplacer("{url_check}", config.EnvConfig.ServiceIPs[0], "{port_check}", config.EnvConfig.PortUrlCheck, "{endpoint_check}", config.EnvConfig.EndPointCheck)
 

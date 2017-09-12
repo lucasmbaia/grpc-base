@@ -75,7 +75,7 @@ func LoadConfig() {
     }
 
     if EnvConfig.Hostname, err = os.Hostname(); err != nil {
-      return err
+      log.Fatalf("Error to get hostname: ", err)
     }
 
     parsed = true
