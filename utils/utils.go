@@ -1,6 +1,7 @@
 package utils
 
 import (
+  "encoding/json"
   "net"
 )
 
@@ -24,4 +25,17 @@ func GetIPs() ([]string, error) {
   }
 
   return ips, nil
+}
+
+func ConvertArgsToString(i interface{}) string {
+  var (
+    body  []byte
+    err   error
+  )
+
+  if body, err = json.Marshal(i); err != nil {
+    return err.Error()
+  }
+
+  return string(body)
 }
