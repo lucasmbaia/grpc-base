@@ -35,7 +35,7 @@ func RegisterService() error {
     service   consulConfig
   )
 
-  if ips, err = getIPs(); err != nil {
+  if ips, err = GetIPs(); err != nil {
     return err
   }
 
@@ -97,7 +97,7 @@ func register(c consulConfig) error {
   return client.Agent().ServiceRegister(&service)
 }
 
-func getIPs() ([]string, error) {
+func GetIPs() ([]string, error) {
   var (
     addrs []net.Addr
     err   error
