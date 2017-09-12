@@ -87,3 +87,7 @@ func (s Span) Event(event []string) {
     s.Span.LogEvent(value)
   }
 }
+
+func (s Span) Tag(key, value string) {
+  s.Span.SetTag(key, value)
+}
