@@ -40,7 +40,7 @@ func RegisterService() error {
 
   service = consulConfig{
     ConsulURL:	    config.EnvConfig.ConsulURL,
-    ID:		    hostname,
+    ID:		    config.EnvConfig.Hostname,
     Name:	    config.EnvConfig.ServiceName,
     Address:	    config.EnvConfig.ServiceIPs[0],
     Port:	    config.EnvConfig.ServicePort,

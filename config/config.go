@@ -2,6 +2,7 @@ package config
 
 import (
   "log"
+  "os"
 
   "github.com/lucasmbaia/grpc-base/utils"
   "github.com/lucasmbaia/go-environment/local"
@@ -33,6 +34,7 @@ type Config struct {
   Tracer		bool	  `env:"TRACER" envDefault:"false"`
   ZipkinURL		string	  `env:"ZIPKIN_URL" envDefault:""`
   ServiceIPs		[]string  `env:"SERVICE_IPS" envDefault:""`
+  Hostname		string	  `env:"HOSTNAME" envDefault:""`
 }
 
 type Service struct {
@@ -70,6 +72,10 @@ func LoadConfig() {
 
     if EnvConfig.ServiceIPs, err = utils.GetIPs(); err != nil {
       log.Fatalf("Error to get ips: ", err)
+    }
+
+    if EnvConfig.Hostname, err = os.Hostname(); err != nil {
+      return err
     }
 
     parsed = true
