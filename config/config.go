@@ -2,9 +2,8 @@ package config
 
 import (
   "log"
-  "os"
 
-  "github.com/lucasmbaia/grpc-base/consul"
+  "github.com/lucasmbaia/grpc-base/utils"
   "github.com/lucasmbaia/go-environment/local"
   "github.com/lucasmbaia/go-environment/etcd"
 )
@@ -34,7 +33,6 @@ type Config struct {
   Tracer		bool	  `env:"TRACER" envDefault:"false"`
   ZipkinURL		string	  `env:"ZIPKIN_URL" envDefault:""`
   ServiceIPs		[]string  `env:"SERVICE_IPS" envDefault:""`
-  Hostname		string	  `env:"HOSTNAME" envDefault:""`
 }
 
 type Service struct {
@@ -70,12 +68,8 @@ func LoadConfig() {
       log.Fatalf("Error to get etcd env: ", err)
     }
 
-    if EnvConfig.ServiceIPs, err = consul.GetIPs(); err != nil {
+    if EnvConfig.ServiceIPs, err = utils.GetIPs(); err != nil {
       log.Fatalf("Error to get ips: ", err)
-    }
-
-    if EnvConfig.Hostname, err = os.Hostname(); err != nil {
-      log.Fatalf("Error to get hostname: ", err)
     }
 
     parsed = true

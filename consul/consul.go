@@ -4,7 +4,6 @@ import (
   "os"
   "strings"
   "strconv"
-  "net"
 
   _consul "github.com/hashicorp/consul/api"
   "github.com/lucasmbaia/grpc-base/config"
@@ -29,27 +28,21 @@ type consulConfig struct {
 func RegisterService() error {
   var (
     err	      error
-    ips	      []string
     urlCheck  *strings.Replacer
-    hostname  string
     service   consulConfig
   )
-
-  if ips, err = GetIPs(); err != nil {
-    return err
-  }
 
   if hostname, err = os.Hostname(); err != nil {
     return err
   }
 
-  urlCheck = strings.NewReplacer("{url_check}", ips[0], "{port_check}", config.EnvConfig.PortUrlCheck, "{endpoint_check}", config.EnvConfig.EndPointCheck)
+  urlCheck = strings.NewReplacer("{url_check}", config.EnvConfig.ServiceIPs[0], "{port_check}", config.EnvConfig.PortUrlCheck, "{endpoint_check}", config.EnvConfig.EndPointCheck)
 
   service = consulConfig{
     ConsulURL:	    config.EnvConfig.ConsulURL,
     ID:		    hostname,
     Name:	    config.EnvConfig.ServiceName,
-    Address:	    ips[0],
+    Address:	    config.EnvConfig.ServiceIPs[0],
     Port:	    config.EnvConfig.ServicePort,
     UrlCheck:	    urlCheck.Replace(URL_CHECK),
     IntervalCheck:  config.EnvConfig.ServiceIntervalCheck,
@@ -95,26 +88,4 @@ func register(c consulConfig) error {
   }
 
   return client.Agent().ServiceRegister(&service)
-}
-
-func GetIPs() ([]string, error) {
-  var (
-    addrs []net.Addr
-    err   error
-    ips   []string
-  )
-
-  if addrs, err = net.InterfaceAddrs(); err != nil {
-    return ips, err
-  }
-
-  for _, addr := range addrs {
-    if ip, ok := addr.(*net.IPNet); ok && !ip.IP.IsLoopback() {
-      if ip.IP.To4() != nil {
-	ips = append(ips, ip.IP.String())
-      }
-    }
-  }
-
-  return ips, nil
 }
