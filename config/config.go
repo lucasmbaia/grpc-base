@@ -33,6 +33,8 @@ type Config struct {
   GrpcSSL		bool	  `env:"GRPC_SSL" envDefault:""`
   Tracer		bool	  `env:"TRACER" envDefault:"false"`
   ZipkinURL		string	  `env:"ZIPKIN_URL" envDefault:""`
+  DebugZipkin		bool	  `env:"DEBUG_ZIPKIN" envDefault:"true"`
+  SameSpanZipkin	bool	  `env:"SAME_SPAN_ZIPKIN" envDefault:"false"`
   ServiceIPs		[]string  `env:"SERVICE_IPS" envDefault:""`
   Hostname		string	  `env:"HOSTNAME" envDefault:""`
 }

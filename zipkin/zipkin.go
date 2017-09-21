@@ -18,7 +18,7 @@ type Span struct {
   Ctx	context.Context
 }
 
-func NewCollector(url, hostPort, endPoint string, debug bool) (Collector, error) {
+func NewCollector(url, hostPort, serviceName string, debug, sameSpan bool) (Collector, error) {
   var (
     collector Collector
     err	      error
@@ -29,14 +29,13 @@ func NewCollector(url, hostPort, endPoint string, debug bool) (Collector, error)
   }
 
   if collector.Tracer, err = zipkinTracer.NewTracer(
-    zipkinTracer.NewRecorder(collector.Conn, debug, hostPort, endPoint),
-    zipkinTracer.ClientServerSameSpan(true),
-    zipkinTracer.TraceID128Bit(true),
+    zipkinTracer.NewRecorder(collector.Conn, debug, hostPort, serviceName),
+    zipkinTracer.ClientServerSameSpan(sameSpan),
   ); err != nil {
     return collector, err
   }
 
-  opentracing.SetGlobalTracer(collector.Tracer)
+  opentracing.InitGlobalTracer(collector.Tracer)
 
   return collector, nil
 }
@@ -102,7 +101,7 @@ func OpenZipkin(ctx context.Context, name string) (Collector, Span, error) {
   )
 
   if config.EnvConfig.Tracer {
-    if collector, err = NewCollector(config.EnvConfig.ZipkinURL, "0.0.0.0:0", config.EnvConfig.ServiceName, true); err != nil {
+    if collector, err = NewCollector(config.EnvConfig.ZipkinURL, "0.0.0.0:0", config.EnvConfig.ServiceName, true, false); err != nil {
       return collector, span, err
     }
 

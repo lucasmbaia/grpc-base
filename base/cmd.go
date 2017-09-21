@@ -6,8 +6,10 @@ import (
   "reflect"
   "sync"
 
+  "github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
   "github.com/lucasmbaia/grpc-base/config"
   "github.com/lucasmbaia/grpc-base/consul"
+  "github.com/lucasmbaia/grpc-base/zipkin"
   "google.golang.org/grpc/credentials"
   "google.golang.org/grpc/reflection"
   "google.golang.org/grpc"
@@ -31,6 +33,7 @@ func (c ConfigCMD) Run() error {
     s			*grpc.Server
     args		[]reflect.Value
     wg			sync.WaitGroup
+    collector		zipkin.Collector
   )
 
   wg.Add(2)
@@ -47,9 +50,7 @@ func (c ConfigCMD) Run() error {
 	return
       }
 
-      opts = []grpc.ServerOption{
-	grpc.Creds(creds),
-      }
+      opts = append(opts, grpc.Creds(creds))
     }
 
     if c.RegisterConsul {
@@ -57,6 +58,21 @@ func (c ConfigCMD) Run() error {
 	errChan <- err
 	return
       }
+    }
+
+    if config.EnvConfig.Tracer {
+      if collector, err = zipkin.NewCollector(
+	config.EnvConfig.ZipkinURL,
+	config.EnvConfig.ServiceIPs[0] + ":" + strconv.Itoa(config.EnvConfig.ServicePort),
+	config.EnvConfig.ServiceName,
+	config.EnvConfig.DebugZipkin,
+	config.EnvConfig.SameSpanZipkin,
+      ); err != nil {
+	errChan <- err
+	return
+      }
+
+      opts = append(opts, grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(collector.Tracer, otgrpc.LogPayloads())))
     }
 
     s = grpc.NewServer(opts...)
