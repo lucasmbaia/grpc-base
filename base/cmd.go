@@ -18,6 +18,7 @@ import (
 type ConfigCMD struct {
   SSL		    bool
   RegisterConsul    bool
+  RegisterRest	    bool
   ServerConfig	    interface{}
   HandlerEndpoint   reflect.Value
   ServiceServer	    reflect.Value
@@ -72,7 +73,7 @@ func (c ConfigCMD) Run() error {
 	return
       }
 
-      opts = append(opts, grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(collector.Tracer, otgrpc.LogPayloads())))
+      opts = append(opts, grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(collector.Tracer)))
     }
 
     s = grpc.NewServer(opts...)
@@ -88,9 +89,18 @@ func (c ConfigCMD) Run() error {
   }()
 
   go func() {
-    errChan <-gateway(c.HandlerEndpoint, c.SSL)
+    errChan <-onlyCheck()
     wg.Done()
   }()
+
+  if c.RegisterRest {
+    wg.Add(1)
+
+    go func() {
+      errChan <-gateway(c.HandlerEndpoint, c.SSL)
+      wg.Done()
+    }()
+  }
 
   wg.Wait()
 
