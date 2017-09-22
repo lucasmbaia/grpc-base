@@ -37,6 +37,8 @@ type Config struct {
   SameSpanZipkin	bool	  `env:"SAME_SPAN_ZIPKIN" envDefault:"false"`
   ServiceIPs		[]string  `env:"SERVICE_IPS" envDefault:""`
   Hostname		string	  `env:"HOSTNAME" envDefault:""`
+
+  ZipKinTracer		interface{}
 }
 
 type Service struct {

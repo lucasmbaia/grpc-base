@@ -73,6 +73,7 @@ func (c ConfigCMD) Run() error {
 	return
       }
 
+      config.EnvConfig.ZipKinTracer = collector
       opts = append(opts, grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(collector.Tracer)))
     }
 
