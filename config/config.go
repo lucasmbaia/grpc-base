@@ -17,8 +17,8 @@ var (
 
 type Config struct {
   ConsulURL             string	  `env:"CONSUL_URL" envDefault:"127.0.0.1:8500"`
-  ServiceName           string	  `env:"SERVICE_NAME" envDefault:"grpc-orchestration"`
-  ServicePort           int	  `env:"SERVICE_PORT" envDefault:"5000"`
+  ServiceName           string	  `env:"SERVICE_NAME" envDefault:""`
+  ServicePort           int	  `env:"SERVICE_PORT" envDefault:""`
   TypeConnection	string	  `env:"TYPE_CONNECTION" envDefault:"tcp"`
   ServiceIntervalCheck  int	  `env:"SERVICE_INTERVAL_CHECK" envDefault:"5"`
   ServiceTimeout        int	  `env:"SERVICE_TIMEOUT" envDefault:"1"`
@@ -31,7 +31,8 @@ type Config struct {
   ServerNameAuthority   string	  `env:"SERVER_NAME_AUTHORITY" envDefault:""`
   WorkflowsName		[]string  `env:"WORKFLOWS_NAME" envDefault:""`
   GrpcSSL		bool	  `env:"GRPC_SSL" envDefault:""`
-  Tracer		bool	  `env:"TRACER" envDefault:"false"`
+  TracerServer		bool	  `env:"TRACER_SERVER" envDefault:"true"`
+  TracerClient		bool	  `env:"TRACER_CLIENT" envDefault:"false"`
   ZipkinURL		string	  `env:"ZIPKIN_URL" envDefault:""`
   DebugZipkin		bool	  `env:"DEBUG_ZIPKIN" envDefault:"true"`
   SameSpanZipkin	bool	  `env:"SAME_SPAN_ZIPKIN" envDefault:"false"`

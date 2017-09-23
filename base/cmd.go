@@ -61,7 +61,7 @@ func (c ConfigCMD) Run() error {
       }
     }
 
-    if config.EnvConfig.Tracer {
+    if config.EnvConfig.TracerServer {
       if collector, err = zipkin.NewCollector(
 	config.EnvConfig.ZipkinURL,
 	config.EnvConfig.ServiceIPs[0] + ":" + strconv.Itoa(config.EnvConfig.ServicePort),
