@@ -3,7 +3,6 @@ package zipkin
 import (
   "context"
 
-  "github.com/lucasmbaia/grpc-base/config"
   opentracing "github.com/opentracing/opentracing-go"
   zipkinTracer "github.com/openzipkin/zipkin-go-opentracing"
 )
@@ -90,28 +89,4 @@ func (s Span) Event(event []string) {
 
 func (s Span) Tag(key, value string) {
   s.Span.SetTag(key, value)
-}
-
-func OpenZipkin(ctx context.Context, name string) (Collector, Span, error) {
-  var (
-    collector Collector
-    span      Span
-    err       error
-    tags      = make(map[string]string)
-  )
-
-  if config.EnvConfig.Tracer {
-    if collector, err = NewCollector(config.EnvConfig.ZipkinURL, "0.0.0.0:0", config.EnvConfig.ServiceName, true, false); err != nil {
-      return collector, span, err
-    }
-
-    tags = map[string]string{
-      "Host":     config.EnvConfig.ServiceIPs[0],
-      "Hostname": config.EnvConfig.Hostname,
-    }
-
-    span = OpenChildSpan(ctx, name, tags, nil)
-  }
-
-  return collector, span, nil
 }
