@@ -3,7 +3,7 @@ import:
 - package: golang.org/x/net/context
 - package: google.golang.org/grpc
 - package: google.golang.org/grpc/reflection
-- package: github.com/golang/protobuf/proto
+- package: github.com/golang/protobuf
 - package: github.com/grpc-ecosystem/grpc-gateway
   version: 1.2.2
 - package: github.com/hashicorp/consul/api

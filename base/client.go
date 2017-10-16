@@ -5,6 +5,7 @@ import (
   "github.com/lucasmbaia/grpc-base/config"
   "github.com/lucasmbaia/grpc-base/zipkin"
   "google.golang.org/grpc/credentials"
+  "github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
 )
 
 type Config struct {
