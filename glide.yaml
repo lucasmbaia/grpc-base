@@ -1,8 +1,7 @@
 package: github.com/lucasmbaia/grpc-base
 import:
 - package: golang.org/x/net/context
-- package: github.com/grpc/grpc-go
-  version: bf35f1b9619f442d2887b585620f1fa2efa39bc0
+- package: google.golang.org/grpc
 - package: google.golang.org/grpc/reflection
 - package: github.com/golang/protobuf
 - package: github.com/grpc-ecosystem/grpc-gateway
