@@ -8,6 +8,7 @@ import (
 
   "github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
   "github.com/lucasmbaia/grpc-base/config"
+  "github.com/lucasmbaia/grpc-base/utils"
   "github.com/lucasmbaia/grpc-base/consul"
   "github.com/lucasmbaia/grpc-base/zipkin"
   "google.golang.org/grpc/credentials"
@@ -26,15 +27,17 @@ type ConfigCMD struct {
 
 func (c ConfigCMD) Run() error {
   var (
-    listen		net.Listener
-    err			error
-    errChan		= make(chan error, 1)
-    creds		credentials.TransportCredentials
-    opts		[]grpc.ServerOption
-    s			*grpc.Server
-    args		[]reflect.Value
-    wg			sync.WaitGroup
-    collector		zipkin.Collector
+    listen		    net.Listener
+    err			    error
+    errChan		    = make(chan error, 1)
+    creds		    credentials.TransportCredentials
+    opts		    []grpc.ServerOption
+    s			    *grpc.Server
+    args		    []reflect.Value
+    wg			    sync.WaitGroup
+    collector		    zipkin.Collector
+    unaryServerInterceptor  []grpc.UnaryServerInterceptor
+    streamServerInterceptor []grpc.StreamServerInterceptor
   )
 
   wg.Add(2)
@@ -74,8 +77,14 @@ func (c ConfigCMD) Run() error {
       }
 
       config.EnvConfig.ZipKinTracer = collector
-      opts = append(opts, grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(collector.Tracer)))
+      unaryServerInterceptor = append(unaryServerInterceptor, otgrpc.OpenTracingServerInterceptor(collector.Tracer))
     }
+
+    unaryServerInterceptor = append(unaryServerInterceptor, utils.PanicUnaryInterceptor)
+    streamServerInterceptor = append(streamServerInterceptor, utils.PanicStreamInterceptor)
+
+    opts = append(opts, grpc.UnaryInterceptor(utils.UnaryInterceptor(unaryServerInterceptor...)))
+    opts = append(opts, grpc.StreamInterceptor(utils.StreamInterceptor(streamServerInterceptor...)))
 
     s = grpc.NewServer(opts...)
 
