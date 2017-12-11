@@ -9,8 +9,10 @@ import (
   "github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
   "github.com/lucasmbaia/grpc-base/config"
   "github.com/lucasmbaia/grpc-base/utils"
+  "github.com/lucasmbaia/grpc-base/utils/panic"
   "github.com/lucasmbaia/grpc-base/consul"
   "github.com/lucasmbaia/grpc-base/zipkin"
+  "github.com/getsentry/raven-go"
   "google.golang.org/grpc/credentials"
   "google.golang.org/grpc/reflection"
   "google.golang.org/grpc"
@@ -23,6 +25,13 @@ type ConfigCMD struct {
   ServerConfig	    interface{}
   HandlerEndpoint   reflect.Value
   ServiceServer	    reflect.Value
+}
+
+func init() {
+  if config.EnvConfig.SentryUrl != "" {
+    //raven.SetDSN("https://7275d55b562741898c85d24607986002:b16e18ae6e7d4ffeb2049914184db1c1@sentry.io/256694")
+    raven.SetDSN(config.EnvConfig.SentryUrl)
+  }
 }
 
 func (c ConfigCMD) Run() error {
@@ -80,8 +89,9 @@ func (c ConfigCMD) Run() error {
       unaryServerInterceptor = append(unaryServerInterceptor, otgrpc.OpenTracingServerInterceptor(collector.Tracer))
     }
 
-    unaryServerInterceptor = append(unaryServerInterceptor, utils.PanicUnaryInterceptor)
-    streamServerInterceptor = append(streamServerInterceptor, utils.PanicStreamInterceptor)
+    utils.InitLogrus(&unaryServerInterceptor, &streamServerInterceptor)
+    unaryServerInterceptor = append(unaryServerInterceptor, panic.PanicUnaryInterceptor)
+    streamServerInterceptor = append(streamServerInterceptor, panic.PanicStreamInterceptor)
 
     opts = append(opts, grpc.UnaryInterceptor(utils.UnaryInterceptor(unaryServerInterceptor...)))
     opts = append(opts, grpc.StreamInterceptor(utils.StreamInterceptor(streamServerInterceptor...)))

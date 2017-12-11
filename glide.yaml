@@ -14,3 +14,7 @@ import:
 - package: github.com/opentracing/opentracing-go
 - package: github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc
 - package: google.golang.org/grpc/status
+- package: github.com/getsentry/raven-go
+- package: github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus
+- package: github.com/sirupsen/logrus
+- package: github.com/grpc-ecosystem/go-grpc-middleware/tags
