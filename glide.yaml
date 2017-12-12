@@ -18,3 +18,4 @@ import:
 - package: github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus
 - package: github.com/sirupsen/logrus
 - package: github.com/grpc-ecosystem/go-grpc-middleware/tags
+- package: github.com/satori/go.uuid

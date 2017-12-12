@@ -7,6 +7,7 @@ import (
   "sync"
 
   "github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+  "github.com/lucasmbaia/grpc-base/utils/transaction"
   "github.com/lucasmbaia/grpc-base/config"
   "github.com/lucasmbaia/grpc-base/utils"
   "github.com/lucasmbaia/grpc-base/utils/panic"
@@ -91,6 +92,7 @@ func (c ConfigCMD) Run() error {
 
     utils.InitLogrus(&unaryServerInterceptor, &streamServerInterceptor)
     unaryServerInterceptor = append(unaryServerInterceptor, panic.PanicUnaryInterceptor)
+    unaryServerInterceptor = append(unaryServerInterceptor, transaction.TransactionServerInterceptor())
     streamServerInterceptor = append(streamServerInterceptor, panic.PanicStreamInterceptor)
 
     opts = append(opts, grpc.UnaryInterceptor(utils.UnaryInterceptor(unaryServerInterceptor...)))

@@ -6,6 +6,7 @@ import (
   "github.com/lucasmbaia/grpc-base/zipkin"
   "google.golang.org/grpc/credentials"
   "github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+  "github.com/lucasmbaia/grpc-base/utils/transaction"
 )
 
 type Config struct {
@@ -26,10 +27,12 @@ func (c Config) ClientConnect() (*grpc.ClientConn, error) {
 
     opts = []grpc.DialOption{
       grpc.WithTransportCredentials(creds),
+      grpc.WithUnaryInterceptor(transaction.TrasactionClientInterceptor()),
     }
   } else {
     opts = []grpc.DialOption{
       grpc.WithInsecure(),
+      grpc.WithUnaryInterceptor(transaction.TrasactionClientInterceptor()),
     }
   }
 
