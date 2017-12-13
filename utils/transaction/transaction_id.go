@@ -21,7 +21,7 @@ func TrasactionClientInterceptor() grpc.UnaryClientInterceptor {
       ok  bool
     )
 
-    if md, ok = metadata.FromOutgoingContext(ctx); !ok {
+    if md, ok = metadata.FromIncomingContext(ctx); !ok {
       md = metadata.New(newMapID())
     } else {
       if _, ok = md[KEY_TRANSACTION]; !ok {

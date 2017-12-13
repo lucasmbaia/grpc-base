@@ -5,7 +5,7 @@ import (
   "google.golang.org/grpc"
 )
 
-func UnaryInterceptor(interceptor ...grpc.UnaryServerInterceptor) grpc.UnaryServerInterceptor {
+func ServerUnaryInterceptor(interceptor ...grpc.UnaryServerInterceptor) grpc.UnaryServerInterceptor {
   var (
     lastInterceptor int
     size	    = len(interceptor)
@@ -40,7 +40,7 @@ func UnaryInterceptor(interceptor ...grpc.UnaryServerInterceptor) grpc.UnaryServ
   }
 }
 
-func StreamInterceptor(interceptor ...grpc.StreamServerInterceptor) grpc.StreamServerInterceptor {
+func ServerStreamInterceptor(interceptor ...grpc.StreamServerInterceptor) grpc.StreamServerInterceptor {
   var (
     lastInterceptor int
     size	    = len(interceptor)
@@ -72,5 +72,75 @@ func StreamInterceptor(interceptor ...grpc.StreamServerInterceptor) grpc.StreamS
 
   return func(srv interface{}, stream grpc.ServerStream, _ *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
     return handler(srv, stream)
+  }
+}
+
+func ClientUnaryInterceptor(interceptor ...grpc.UnaryClientInterceptor) grpc.UnaryClientInterceptor {
+  var (
+    lastInterceptor int
+    size	    = len(interceptor)
+  )
+
+  if size == 1 {
+    return interceptor[0]
+  } else {
+    lastInterceptor = size - 1
+
+    return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+      var (
+	unaryHandler  grpc.UnaryInvoker
+	count	      int
+      )
+
+      unaryHandler = func(currentCtx context.Context, currentMethod string, currentReq, currentRepl interface{}, currentConn *grpc.ClientConn, currentOpts ...grpc.CallOption) error {
+	if count == lastInterceptor {
+	  return invoker(currentCtx, currentMethod, currentReq, currentRepl, currentConn, currentOpts...)
+	}
+
+	count++
+	return interceptor[count](currentCtx, currentMethod, currentReq, currentRepl, currentConn, unaryHandler, currentOpts...)
+      }
+
+      return interceptor[0](ctx, method, req, reply, cc, unaryHandler, opts...)
+    }
+  }
+
+  return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+    return invoker(ctx, method, req, reply, cc, opts...)
+  }
+}
+
+func ClientStreamInterceptor(interceptor ...grpc.StreamClientInterceptor) grpc.StreamClientInterceptor {
+  var (
+    lastInterceptor int
+    size	    = len(interceptor)
+  )
+
+  if size == 1 {
+    return interceptor[0]
+  } else {
+    lastInterceptor = size - 1
+
+    return func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
+      var (
+	streamHandler grpc.Streamer
+	count	      int
+      )
+
+      streamHandler = func(currentCtx context.Context, currentDesc *grpc.StreamDesc, currentConn *grpc.ClientConn, currentMethod string, currentOpts ...grpc.CallOption) (grpc.ClientStream, error) {
+	if count == lastInterceptor {
+	  return streamer(currentCtx, currentDesc, currentConn, currentMethod, currentOpts...)
+	}
+
+	count++
+	return interceptor[count](currentCtx, currentDesc, currentConn, currentMethod, streamHandler, currentOpts...)
+      }
+
+      return interceptor[0](ctx, desc, cc, method, streamHandler, opts...)
+    }
+  }
+
+  return func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
+    return streamer(ctx, desc, cc, method, opts...)
   }
 }

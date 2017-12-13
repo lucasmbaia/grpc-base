@@ -95,8 +95,8 @@ func (c ConfigCMD) Run() error {
     unaryServerInterceptor = append(unaryServerInterceptor, transaction.TransactionServerInterceptor())
     streamServerInterceptor = append(streamServerInterceptor, panic.PanicStreamInterceptor)
 
-    opts = append(opts, grpc.UnaryInterceptor(utils.UnaryInterceptor(unaryServerInterceptor...)))
-    opts = append(opts, grpc.StreamInterceptor(utils.StreamInterceptor(streamServerInterceptor...)))
+    opts = append(opts, grpc.UnaryInterceptor(utils.ServerUnaryInterceptor(unaryServerInterceptor...)))
+    opts = append(opts, grpc.StreamInterceptor(utils.ServerStreamInterceptor(streamServerInterceptor...)))
 
     s = grpc.NewServer(opts...)
 
