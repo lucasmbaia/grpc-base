@@ -5,8 +5,9 @@ import (
   "github.com/lucasmbaia/grpc-base/config"
   "github.com/lucasmbaia/grpc-base/zipkin"
   "google.golang.org/grpc/credentials"
-  //"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+  "github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
   "github.com/lucasmbaia/grpc-base/utils/transaction"
+  "github.com/lucasmbaia/grpc-base/utils"
 )
 
 type Config struct {
@@ -15,9 +16,10 @@ type Config struct {
 
 func (c Config) ClientConnect() (*grpc.ClientConn, error) {
   var (
-    opts  []grpc.DialOption
-    creds credentials.TransportCredentials
-    err   error
+    opts		    []grpc.DialOption
+    creds		    credentials.TransportCredentials
+    err			    error
+    unaryClientInterceptor  []grpc.UnaryClienInterceptor
   )
 
   if config.EnvConfig.GrpcSSL {
@@ -36,9 +38,13 @@ func (c Config) ClientConnect() (*grpc.ClientConn, error) {
     }
   }
 
+  unaryClientInterceptor = append(unaryClientInterceptor, transaction.TrasactionClientInterceptor())
+
   if config.EnvConfig.TracerClient {
+    unaryClientInterceptor = append(unaryClientInterceptor, otgrpc.OpenTracingClientInterceptor(c.Collector.Tracer))
     //opts = append(opts, grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(c.Collector.Tracer)))
   }
 
+  opts = append(opts, grpc.WithUnaryInterceptor(utils.ClientUnaryInterceptor(unaryClientInterceptor...)))
   return grpc.Dial(config.EnvLocal.LinkerdURL, opts...)
 }
