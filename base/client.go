@@ -19,7 +19,7 @@ func (c Config) ClientConnect() (*grpc.ClientConn, error) {
     opts		    []grpc.DialOption
     creds		    credentials.TransportCredentials
     err			    error
-    unaryClientInterceptor  []grpc.UnaryClienInterceptor
+    unaryClientInterceptor  []grpc.UnaryClientInterceptor
   )
 
   if config.EnvConfig.GrpcSSL {
@@ -42,7 +42,6 @@ func (c Config) ClientConnect() (*grpc.ClientConn, error) {
 
   if config.EnvConfig.TracerClient {
     unaryClientInterceptor = append(unaryClientInterceptor, otgrpc.OpenTracingClientInterceptor(c.Collector.Tracer))
-    //opts = append(opts, grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(c.Collector.Tracer)))
   }
 
   opts = append(opts, grpc.WithUnaryInterceptor(utils.ClientUnaryInterceptor(unaryClientInterceptor...)))
