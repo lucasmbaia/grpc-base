@@ -21,25 +21,22 @@ func UnaryServerInterceptor(entry *logrus.Entry) grpc.UnaryServerInterceptor {
     var (
       code    codes.Code
       level   logrus.Level
-      fields  logrus.Fields
+    )
+
+    printLog(
+      loggerFields(ctx, entry, info.FullMethod, defaultErrorToCode(nil), req, nil),
+      defaultCodeToLevel(defaultErrorToCode(nil)),
+      "Init Grpc Server",
     )
 
     resp, err = handler(ctx, req)
     code = defaultErrorToCode(err)
     level = defaultCodeToLevel(code)
 
-    fields = logrus.Fields {
-      "grpc.code":  code.String(),
-    }
-
-    if err != nil {
-      fields[logrus.ErrorKey] = err
-    }
-
     printLog(
-      loggerFields(ctx, entry, info.FullMethod),
+      loggerFields(ctx, entry, info.FullMethod, code, resp, err),
       level,
-      "Finished",
+      "Done Grpc Server",
     )
 
     return resp, err
@@ -51,7 +48,6 @@ func StreamServerInterceptor(entry *logrus.Entry) grpc.StreamServerInterceptor {
     var (
       code    codes.Code
       level   logrus.Level
-      fields  logrus.Fields
       err     error
       str     = &LoggingStream{ServerStream: stream, LoggingContext: stream.Context()}
     )
@@ -60,16 +56,8 @@ func StreamServerInterceptor(entry *logrus.Entry) grpc.StreamServerInterceptor {
     code = defaultErrorToCode(err)
     level = defaultCodeToLevel(code)
 
-    fields = logrus.Fields {
-      "grpc.code":  code.String(),
-    }
-
-    if err != nil {
-      fields[logrus.ErrorKey] = err
-    }
-
     printLog(
-      loggerFields(stream.Context(), entry, info.FullMethod),
+      loggerFields(stream.Context(), entry, info.FullMethod, code, nil, err),
       level,
       "Finished",
     )
@@ -78,17 +66,34 @@ func StreamServerInterceptor(entry *logrus.Entry) grpc.StreamServerInterceptor {
   }
 }
 
-func loggerFields(ctx context.Context, entry *logrus.Entry, methodString string) *logrus.Entry {
-  return entry.WithFields(
-    logrus.Fields {
-      "system":           "grpc",
-      "span.kind":        "server",
-      "grpc.service":     path.Dir(methodString)[1:],
-      "grpc.method":      path.Base(methodString),
-      "transaction.id":	  transaction.GetTransactionID(ctx),
-      "grpc_start_time":  time.Now().Format(time.RFC3339),
-    },
-  )
+func loggerFields(ctx context.Context, entry *logrus.Entry, methodString string, code codes.Code, msg interface{}, err error) *logrus.Entry {
+  if err == nil {
+    return entry.WithFields(
+      logrus.Fields {
+	"system":           "grpc",
+	"span.kind":        "server",
+	"transaction.id":   transaction.GetTransactionID(ctx),
+	"grpc.service":     path.Dir(methodString)[1:],
+	"grpc.method":      path.Base(methodString),
+	"grpc.code":	    code.String(),
+	"grpc.values":	    msg,
+	"grpc_start_time":  time.Now().Format(time.RFC3339),
+      },
+    )
+  } else {
+    return entry.WithFields(
+      logrus.Fields {
+	"system":           "grpc",
+	"span.kind":        "server",
+	"transaction.id":   transaction.GetTransactionID(ctx),
+	"grpc.service":     path.Dir(methodString)[1:],
+	"grpc.method":      path.Base(methodString),
+	"grpc.code":	    code.String(),
+	"grpc.error":	    err,
+	"grpc_start_time":  time.Now().Format(time.RFC3339),
+      },
+    )
+  }
 }
 
 func printLog(entry *logrus.Entry, level logrus.Level, format string, args ...interface{}) {
