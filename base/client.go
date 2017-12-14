@@ -5,7 +5,7 @@ import (
   "github.com/lucasmbaia/grpc-base/config"
   "github.com/lucasmbaia/grpc-base/zipkin"
   "google.golang.org/grpc/credentials"
-  "github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+  //"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
   "github.com/lucasmbaia/grpc-base/utils/transaction"
 )
 
@@ -37,7 +37,7 @@ func (c Config) ClientConnect() (*grpc.ClientConn, error) {
   }
 
   if config.EnvConfig.TracerClient {
-    opts = append(opts, grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(c.Collector.Tracer)))
+    //opts = append(opts, grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(c.Collector.Tracer)))
   }
 
   return grpc.Dial(config.EnvLocal.LinkerdURL, opts...)
